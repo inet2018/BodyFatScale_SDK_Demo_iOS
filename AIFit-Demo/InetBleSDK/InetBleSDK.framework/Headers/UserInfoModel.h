@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, MeasureStatus) {
     MeasureStatus_Complete,
 };
 
-@interface UserInfoModel : NSObject
+@interface UserInfoModel : NSObject<NSCopying>
 
 @property (nonatomic, assign) double weightTimeStamp;
 
