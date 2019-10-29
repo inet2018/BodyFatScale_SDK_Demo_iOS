@@ -384,6 +384,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 20191029;
 				DEVELOPMENT_TEAM = YEU77XR292;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)/GoodTypeBLE/Products\"",
@@ -394,6 +395,7 @@
 				INFOPLIST_FILE = "AIFit-Demo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pingwang.AIFit-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -405,6 +407,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 20191029;
 				DEVELOPMENT_TEAM = YEU77XR292;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)/GoodTypeBLE/Products\"",
@@ -415,6 +418,7 @@
 				INFOPLIST_FILE = "AIFit-Demo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pingwang.AIFit-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
