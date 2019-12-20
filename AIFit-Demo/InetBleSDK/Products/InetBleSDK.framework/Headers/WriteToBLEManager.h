@@ -6,6 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
+@class BLEUser;
+
 
 @interface WriteToBLEManager : NSObject
 
@@ -20,8 +22,8 @@
  @param height      @"177"
  @param age         @"18"
  */
-- (void)synchronousUserWithSex:(NSInteger)sex withHeight:(NSString *)height withAge:(NSString *)age;
-
+- (void)synchronousUserWithSex:(NSInteger)sex withHeight:(NSString *)height withAge:(NSString *)age NS_DEPRECATED_IOS(2_0,8_0);
+- (void)syncWeighingUser:(BLEUser *)user;
 
 /**
  set Unit for ble scale
@@ -30,6 +32,18 @@
  */
 - (void)write_To_Unit:(NSInteger)unitNumber;
 
+
+
+/**
+ send offline user list to Ble
+ */
+- (void)sendOfflineUserListToBle:(NSArray <BLEUser *> *)usrsArr;
+
+
+/**
+ request historys
+ */
+- (void)requestOfflineHistory;
 
 @end
 

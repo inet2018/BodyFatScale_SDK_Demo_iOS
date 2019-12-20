@@ -6,6 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
+@class BLEUser;
+
 
 typedef NS_ENUM(NSInteger, WeightUnitType) {
     WeightUnitType_KG = 0,
@@ -18,11 +20,16 @@ typedef NS_ENUM(NSInteger, MeasureStatus) {
     MeasureStatus_Unstable = 0,
     MeasureStatus_Stable,
     MeasureStatus_Complete,
+    MeasureStatus_OfflineHistory,
 };
 
 @interface UserInfoModel : NSObject<NSCopying>
 
-@property (nonatomic, assign) double weightTimeStamp;
+//@property (nonatomic, assign) double weightTimeStamp;
+@property (nonatomic, copy) NSString *date;
+@property (nonatomic, copy) NSString *time;
+@property (nonatomic, strong) BLEUser *bleUser;
+
 
 /// weight
 @property (nonatomic, assign) float weightsum;

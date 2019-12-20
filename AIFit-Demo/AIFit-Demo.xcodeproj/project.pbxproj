@@ -13,9 +13,12 @@
 		5D8EC79F213AB6990053C2E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D8EC79D213AB6990053C2E9 /* LaunchScreen.storyboard */; };
 		5D8EC7A2213AB6990053C2E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D8EC7A1213AB6990053C2E9 /* main.m */; };
 		5D8EC7AC213AB6990053C2E9 /* AIFit_DemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D8EC7AB213AB6990053C2E9 /* AIFit_DemoUITests.m */; };
+		827389CF213BD5840057156D /* InetBleSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 827389CE213BD5840057156D /* InetBleSDK.framework */; };
 		8279C3D6213D21EB00805897 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8279C3D5213D21EB00805897 /* MainViewController.m */; };
 		8279C3D9213D243700805897 /* SearchDeviceVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 8279C3D8213D243700805897 /* SearchDeviceVC.m */; };
-		82F9C1652227DB0A00F870DF /* InetBleSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82F9C1642227DB0A00F870DF /* InetBleSDK.framework */; };
+		95DC38BE23AB8D9B00C5E6E3 /* AppUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 95DC38BD23AB8D9B00C5E6E3 /* AppUser.m */; };
+		95DC38CA23AC836D00C5E6E3 /* SetUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 95DC38C823AC836D00C5E6E3 /* SetUserViewController.m */; };
+		95DC38CB23AC836D00C5E6E3 /* SetUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 95DC38C923AC836D00C5E6E3 /* SetUserViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,11 +43,16 @@
 		5D8EC7A7213AB6990053C2E9 /* AIFit-DemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AIFit-DemoUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D8EC7AB213AB6990053C2E9 /* AIFit_DemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AIFit_DemoUITests.m; sourceTree = "<group>"; };
 		5D8EC7AD213AB6990053C2E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		827389CE213BD5840057156D /* InetBleSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InetBleSDK.framework; path = InetBleSDK/Products/InetBleSDK.framework; sourceTree = SOURCE_ROOT; };
 		8279C3D4213D21EB00805897 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		8279C3D5213D21EB00805897 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		8279C3D7213D243700805897 /* SearchDeviceVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchDeviceVC.h; sourceTree = "<group>"; };
 		8279C3D8213D243700805897 /* SearchDeviceVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchDeviceVC.m; sourceTree = "<group>"; };
-		82F9C1642227DB0A00F870DF /* InetBleSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = InetBleSDK.framework; sourceTree = "<group>"; };
+		95DC38BC23AB8D9B00C5E6E3 /* AppUser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppUser.h; sourceTree = "<group>"; };
+		95DC38BD23AB8D9B00C5E6E3 /* AppUser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppUser.m; sourceTree = "<group>"; };
+		95DC38C723AC836D00C5E6E3 /* SetUserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SetUserViewController.h; sourceTree = "<group>"; };
+		95DC38C823AC836D00C5E6E3 /* SetUserViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SetUserViewController.m; sourceTree = "<group>"; };
+		95DC38C923AC836D00C5E6E3 /* SetUserViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SetUserViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82F9C1652227DB0A00F870DF /* InetBleSDK.framework in Frameworks */,
+				827389CF213BD5840057156D /* InetBleSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,13 +96,18 @@
 		5D8EC791213AB6990053C2E9 /* AIFit-Demo */ = {
 			isa = PBXGroup;
 			children = (
-				82F9C1632227DB0A00F870DF /* InetBleSDK */,
+				827389CE213BD5840057156D /* InetBleSDK.framework */,
 				5D8EC792213AB6990053C2E9 /* AppDelegate.h */,
 				5D8EC793213AB6990053C2E9 /* AppDelegate.m */,
+				95DC38BC23AB8D9B00C5E6E3 /* AppUser.h */,
+				95DC38BD23AB8D9B00C5E6E3 /* AppUser.m */,
 				8279C3D7213D243700805897 /* SearchDeviceVC.h */,
 				8279C3D8213D243700805897 /* SearchDeviceVC.m */,
 				8279C3D4213D21EB00805897 /* MainViewController.h */,
 				8279C3D5213D21EB00805897 /* MainViewController.m */,
+				95DC38C723AC836D00C5E6E3 /* SetUserViewController.h */,
+				95DC38C823AC836D00C5E6E3 /* SetUserViewController.m */,
+				95DC38C923AC836D00C5E6E3 /* SetUserViewController.xib */,
 				5D8EC798213AB6990053C2E9 /* Main.storyboard */,
 				5D8EC79B213AB6990053C2E9 /* Assets.xcassets */,
 				5D8EC79D213AB6990053C2E9 /* LaunchScreen.storyboard */,
@@ -119,14 +132,6 @@
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
-		};
-		82F9C1632227DB0A00F870DF /* InetBleSDK */ = {
-			isa = PBXGroup;
-			children = (
-				82F9C1642227DB0A00F870DF /* InetBleSDK.framework */,
-			);
-			path = InetBleSDK;
-			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -210,6 +215,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95DC38CB23AC836D00C5E6E3 /* SetUserViewController.xib in Resources */,
 				5D8EC79F213AB6990053C2E9 /* LaunchScreen.storyboard in Resources */,
 				5D8EC79C213AB6990053C2E9 /* Assets.xcassets in Resources */,
 				5D8EC79A213AB6990053C2E9 /* Main.storyboard in Resources */,
@@ -232,6 +238,8 @@
 			files = (
 				5D8EC7A2213AB6990053C2E9 /* main.m in Sources */,
 				8279C3D6213D21EB00805897 /* MainViewController.m in Sources */,
+				95DC38CA23AC836D00C5E6E3 /* SetUserViewController.m in Sources */,
+				95DC38BE23AB8D9B00C5E6E3 /* AppUser.m in Sources */,
 				8279C3D9213D243700805897 /* SearchDeviceVC.m in Sources */,
 				5D8EC794213AB6990053C2E9 /* AppDelegate.m in Sources */,
 			);
@@ -384,18 +392,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20191029;
 				DEVELOPMENT_TEAM = YEU77XR292;
-				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SRCROOT)/GoodTypeBLE/Products\"",
-					"$(PROJECT_DIR)/InetBleSDK/Products",
-					"$(PROJECT_DIR)/InetBleSDK",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/InetBleSDK/Products";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "AIFit-Demo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pingwang.AIFit-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -407,18 +409,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20191029;
 				DEVELOPMENT_TEAM = YEU77XR292;
-				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SRCROOT)/GoodTypeBLE/Products\"",
-					"$(PROJECT_DIR)/InetBleSDK/Products",
-					"$(PROJECT_DIR)/InetBleSDK",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/InetBleSDK/Products";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "AIFit-Demo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pingwang.AIFit-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";

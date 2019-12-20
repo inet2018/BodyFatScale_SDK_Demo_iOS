@@ -19,6 +19,7 @@
 @property (nonatomic, assign) BOOL isAddPeripheraling;
 
 
+
 @end
 
 @implementation SearchDeviceVC
@@ -35,6 +36,8 @@
     
     [self setupTableView];
     
+    
+  
     if ([BluetoothManager shareManager].bleState == CBCentralManagerStatePoweredOn) {
         [BluetoothManager shareManager].delegate = self;
         [[BluetoothManager shareManager] startBleScan];

@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "UserInfoModel.h"
+@class UserInfoModel;
 
 
 /**
@@ -27,7 +27,6 @@ typedef NS_ENUM(NSInteger, BleDataAnalysisStatus) {
     BleDataAnalysisStatus_AdcError,        
     
     BleDataAnalysisStatus_LightOff,
-    
 };
 
 @class AnalysisBLEDataManager;
@@ -38,6 +37,8 @@ typedef NS_ENUM(NSInteger, BleDataAnalysisStatus) {
 - (void)AnalysisBLEDataManager:(AnalysisBLEDataManager *)analysisManager updateBleDataAnalysisStatus:(BleDataAnalysisStatus)bleDataAnalysisStatus;
 
 - (void)AnalysisBLEDataManager:(AnalysisBLEDataManager *)analysisManager updateMeasureUserInfo:(UserInfoModel *)infoModel;
+
+- (void)AnalysisBLEDataManager:(AnalysisBLEDataManager *)analysisManager backOfflineHistorys:(NSMutableArray <UserInfoModel *> *)historysMutableArr;
 
 @end
 

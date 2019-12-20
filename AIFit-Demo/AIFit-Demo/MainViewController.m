@@ -9,44 +9,62 @@
 
 #import "SearchDeviceVC.h"
 #import <InetBleSDK/InetBleSDK.h>
+#import "AppUser.h"
+#import "SetUserViewController.h"
 
+@interface MainViewController () <AnalysisBLEDataManagerDelegate, BluetoothManagerDelegate,UITableViewDataSource,UITableViewDelegate>
 
-@interface MainViewController () <AnalysisBLEDataManagerDelegate, BluetoothManagerDelegate>
+@property (weak, nonatomic) IBOutlet UIButton               *connectedDevicesButton;
+@property (weak, nonatomic) IBOutlet UILabel                *userInfoLabel;
+@property (weak, nonatomic) IBOutlet UISegmentedControl     *unitSegmentedControl;
 
-@property (weak, nonatomic) IBOutlet UIButton *connectedDevicesButton;
+@property (weak, nonatomic) IBOutlet UITableView    *tableView;
+@property (nonatomic, strong) NSArray               *itemNameArr;
+@property (nonatomic, strong) NSMutableArray        *itemValueArr;
 
-@property (weak, nonatomic) IBOutlet UISegmentedControl *sexSegmentedC;
-@property (weak, nonatomic) IBOutlet UITextField *ageTextF;
-@property (weak, nonatomic) IBOutlet UITextField *heightTextF;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *unitSegmentedControl;
-
-/**
- * body data show labels
- */
-@property (weak, nonatomic) IBOutlet UILabel *weightsumValue;
-@property (weak, nonatomic) IBOutlet UILabel *BMIValue;
-@property (weak, nonatomic) IBOutlet UILabel *fatRateValue;
-@property (weak, nonatomic) IBOutlet UILabel *muscleValue;
-@property (weak, nonatomic) IBOutlet UILabel *moistureValue;
-@property (weak, nonatomic) IBOutlet UILabel *boneMassValue;
-@property (weak, nonatomic) IBOutlet UILabel *BMRValue;
-@property (weak, nonatomic) IBOutlet UILabel *visceralFatValue;
-@property (weak, nonatomic) IBOutlet UILabel *subcutaneousFatValue;
-@property (weak, nonatomic) IBOutlet UILabel *proteinRateValue;
-@property (weak, nonatomic) IBOutlet UILabel *physicalAgeValue;
-@property (weak, nonatomic) IBOutlet UILabel *AdcValue;
-@property (weak, nonatomic) IBOutlet UILabel *tempValue;
 @property (weak, nonatomic) IBOutlet UILabel *tipLB;
 
-
-//@property (nonatomic, assign) float weightFloat;
 @property (nonatomic, strong) UserInfoModel *currentInfoModel;
-@property (nonatomic, strong) DeviceModel *currentDeviceModel;
+@property (nonatomic, strong) DeviceModel *targetDeviceModel;
 
+@property (nonatomic, strong) AppUser *appUser;
 
 @end
 
 @implementation MainViewController
+
+- (NSArray *)itemNameArr {
+    if (_itemNameArr == nil) {
+        _itemNameArr = @[
+                         @"weight:",
+                         @"BMI:",
+                         @"fatRate:",
+                         @"muscle:",
+                         @"moisture:",
+                         @"boneMass:",
+                         @"BMR:",
+                         @"visceralFat:",
+                         @"subcutaneousFat:",
+                         @"proteinRate:",
+                         @"physicalAge:",
+                         @"ADC:",
+                         @"temperature:",
+                         ];
+    }
+    return _itemNameArr;
+}
+
+
+- (NSMutableArray *)itemValueArr {
+    if (_itemValueArr == nil) {
+        _itemValueArr = [[NSMutableArray alloc] init];
+        for (int i = 0; i < self.itemNameArr.count; i++) {
+            [_itemValueArr addObject:@"--.--"];
+        }
+    }
+    return _itemValueArr;
+}
+
 
 #pragma mark ============ life circle ==============
 
@@ -55,6 +73,21 @@
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(makeViewEndEditing)];
     [self.view addGestureRecognizer:tap];
+    
+    //set default value
+    _appUser = [[AppUser alloc] init];
+    _appUser.sex = 1;
+    _appUser.age = 25;
+    _appUser.height = 175;
+    _appUser.weightKg = 0.0;
+    _appUser.adc = 0;
+    _userInfoLabel.text = [NSString stringWithFormat:@" sex:%d\n age:%d\n height:%d\n weight:%.1f\n adc:%d",_appUser.sex,_appUser.age,_appUser.height,_appUser.weightKg,_appUser.adc];
+    
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    
+    //reset label
+    [self resetLBText];
 }
 
 - (void)makeViewEndEditing {
@@ -70,25 +103,12 @@
     [BluetoothManager shareManager].delegate = self;
     [BluetoothManager enableSDKLogs:YES]; //open log switch
     
-    //reset
-    [self resetLBText];
+    
 }
 
 -(void)resetLBText {
-    self.weightsumValue.text            = @"--.--";
-    self.BMIValue.text                  = @"--.--";
-    self.fatRateValue.text              = @"--.--";
-    self.muscleValue.text               = @"--.--";
-    self.moistureValue.text             = @"--.--";
-    self.boneMassValue.text             = @"--.--";
-    self.subcutaneousFatValue.text      = @"--.--";
-    self.BMRValue.text                  = @"--.--";
-    self.proteinRateValue.text          = @"--.--";
-    self.visceralFatValue.text          = @"--.--";
-    self.physicalAgeValue.text          = @"--.--";
-    self.AdcValue.text                  = @"--.--";
-    self.tempValue.text                 = @"--.--";
-    self.tipLB.text                     = @"--.--";
+    self.itemValueArr = nil;
+    self.tipLB.text   = @"--.--";
 }
 
 
@@ -107,7 +127,7 @@
 - (void)backFromSearchDeviceVC:(DeviceModel *)device {
     NSLog(@"---device:%@",device);
 
-    _currentDeviceModel = device;
+    _targetDeviceModel = device;
     
     [self.connectedDevicesButton setTitle:device.deviceAddress forState:UIControlStateNormal];
     
@@ -120,28 +140,67 @@
 }
 
 
-// click sync user button
-- (IBAction)SyncUserInformation:(id)sender {
-    
-    if (_currentDeviceModel.acNumber.intValue < 2) {
-        //broadcast scale do not need to sync user
-    } else {
-        // must input sex、weight、age
-        NSInteger sex = _sexSegmentedC.selectedSegmentIndex == 0 ? 1 : 2;
-        [[WriteToBLEManager shareManager] synchronousUserWithSex:sex withHeight:_heightTextF.text withAge:_ageTextF.text];
-    }
+- (IBAction)editUser:(id)sender {
+    SetUserViewController *vc = [[SetUserViewController alloc] init];
+    vc.user = _appUser;
+    __weak typeof(self) weakSelf = self;
+    vc.editUserCallBack = ^{
+        weakSelf.userInfoLabel.text = [NSString stringWithFormat:@" sex:%d\n age:%d\n height:%d\n weight:%.1f\n adc:%d",weakSelf.appUser.sex,weakSelf.appUser.age,weakSelf.appUser.height,weakSelf.appUser.weightKg,weakSelf.appUser.adc];
+        
+        [weakSelf syncWeighingUserToBle];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf syncOfflineUserListToBle];
+        });
+        
+    };
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 
+// click sync user button
+- (void)syncWeighingUserToBle {
+    
+    if (_targetDeviceModel.acNumber.intValue < 2) {
+        //broadcast scale do not need to sync user
+    } else {
+        //connect scale must input sex、weight、age
+
+//        NSInteger sex = _sexSegmentedC.selectedSegmentIndex == 0 ? 1 : 2;
+//        [[WriteToBLEManager shareManager] synchronousUserWithSex:sex withHeight:_heightTextF.text withAge:_ageTextF.text];
+        BLEUser *user = [[BLEUser alloc] init];
+        user.userSex = _appUser.sex;
+        user.userAge = _appUser.age;
+        user.userHeight = _appUser.height;
+        [[WriteToBLEManager shareManager] syncWeighingUser:user];
+        
+    }
+}
+
+- (void)syncOfflineUserListToBle {
+    
+    if (_targetDeviceModel.acNumber.intValue < 2) {
+        //broadcast scale can not receive write command
+    } else {
+        BLEUser *user = [[BLEUser alloc] init];
+        user.userSex = _appUser.sex;
+        user.userAge = _appUser.age;
+        user.userHeight = _appUser.height;
+        user.userWeight = _appUser.weightKg; //note
+        user.userAdc = _appUser.adc;         //note
+        [[WriteToBLEManager shareManager] sendOfflineUserListToBle:@[user]]; //you can add more than one user to array
+    }
+    
+}
 
 // click change unit segmentedControl
 - (IBAction)ChooseUnit:(UISegmentedControl *)Segmented {
     
-    if (_currentDeviceModel.acNumber.intValue < 2) {
+    if (_targetDeviceModel.acNumber.intValue < 2) {
         //broadcast scale can not receive write command
     } else {
         [[WriteToBLEManager shareManager] write_To_Unit:Segmented.selectedSegmentIndex];
-        self.weightsumValue.text = [self getWeightShowStr:_currentInfoModel unit:_unitSegmentedControl.selectedSegmentIndex];
+        NSString *weightShow = [self getWeightShowStr:_currentInfoModel unit:_unitSegmentedControl.selectedSegmentIndex];
+        [self.itemValueArr replaceObjectAtIndex:0 withObject:weightShow];
     }
 }
 
@@ -170,7 +229,7 @@
 
 //only used for link scale
 - (void)BluetoothManager:(BluetoothManager *)manager didConnectDevice:(DeviceModel *)deviceModel {
-    _currentDeviceModel = deviceModel;
+    _targetDeviceModel = deviceModel;
 }
 
 #pragma mark - AnalysisBLEDataManagerDelegate
@@ -181,9 +240,18 @@
         {
             _tipLB.text = @"sync time success";
             
-            //then sync user
-            [self SyncUserInformation:nil];
+            //then sync user to be weighing
+            [self syncWeighingUserToBle];
+            //sync offline userlist
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self syncOfflineUserListToBle];
+            });
             
+            //request history
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[WriteToBLEManager shareManager] requestOfflineHistory];
+            });
+
             break;
         }
         case BleDataAnalysisStatus_SyncTimeFailed:
@@ -193,12 +261,13 @@
         }
         case BleDataAnalysisStatus_SyncUserSuccess:
         {
-            _tipLB.text = @"sync current user success";
+            _tipLB.text = @"sync weighing user success";
+            
             break;
         }
         case BleDataAnalysisStatus_SyncUserFailed:
         {
-            _tipLB.text = @"sync current user failed";
+            _tipLB.text = @"sync weighing user failed";
             break;
         }
         case BleDataAnalysisStatus_UnstableWeight:
@@ -234,70 +303,108 @@
     }
 }
 
-
-
 - (void)AnalysisBLEDataManager:(AnalysisBLEDataManager *)analysisManager updateMeasureUserInfo:(UserInfoModel *)infoModel {
     NSLog(@"---infoModel:%@",infoModel);
-
-    if (_currentDeviceModel.acNumber.intValue < 2) {//BroadScale
-        [self updateLabelsForBroadScale:infoModel];
-    } else {
-        [self updateLabelsForLinkScale:infoModel]; //link scale
-    }
-}
-
-- (void)updateLabelsForBroadScale:(UserInfoModel *)infoModel {
     
-    _currentInfoModel                   = infoModel;
-    self.weightsumValue.text            = [self getWeightShowStr:infoModel unit:_unitSegmentedControl.selectedSegmentIndex];
-    self.AdcValue.text                  = [NSString stringWithFormat:@"%.0f",infoModel.newAdc];
-    self.tempValue.text                 = [NSString stringWithFormat:@"%.1f°C",infoModel.temperature];
+    _currentInfoModel = infoModel;
+    [self refreshTableView];
     
-#pragma mark ============ test bm15 broadcast scale AlgorithmSDK ==============
-    if (_currentInfoModel.newAdc > 0) {
+    if (_currentInfoModel.measureStatus == MeasureStatus_Complete && _currentInfoModel.weightsum > 0 && _currentInfoModel.newAdc > 0) {
+        
         float weight = _currentInfoModel.weightsum/pow(10, _currentInfoModel.weightOriPoint);//6895->68.95
         float adc = _currentInfoModel.newAdc;
-        int sex = _sexSegmentedC.selectedSegmentIndex == 0 ? 1 : 2;
-        int age = _ageTextF.text.intValue;
-        int height = _heightTextF.text.intValue;
+        _appUser.weightKg = weight;
+        _appUser.adc = adc;
+        _userInfoLabel.text = [NSString stringWithFormat:@" sex:%d\n age:%d\n height:%d\n weight:%.1f\n adc:%d",_appUser.sex,_appUser.age,_appUser.height,_appUser.weightKg,_appUser.adc];
         
-        AlgorithmModel *algModel = [AlgorithmSDK getBodyDataFromAlgorithm_1WithWeight:weight adc:adc sex:sex age:age height:height];
-        NSLog(@"BM15 AlgorithmModel: %@",algModel);
-        _currentInfoModel.fatRate = algModel.BM_BFR.floatValue;
-        _currentInfoModel.BMI = algModel.BM_BMI.floatValue;
-        _currentInfoModel.moisture = algModel.BM_Water.floatValue;
-        _currentInfoModel.muscle = algModel.BM_MuscleRate.floatValue;
-        _currentInfoModel.BMR = algModel.BM_BMR.floatValue;
-        _currentInfoModel.boneMass = algModel.BM_BoneMass.floatValue;
-        _currentInfoModel.visceralFat = algModel.BM_VisFat.floatValue;
-        _currentInfoModel.proteinRate = algModel.BM_ProteinRate.floatValue;
-        _currentInfoModel.physicalAge = algModel.BM_BodyAge.floatValue;
-        _currentInfoModel.subcutaneousFat = algModel.BM_SubFat.floatValue;
-        //show this data
-        [self updateLabelsForLinkScale:_currentInfoModel];
+        if (_targetDeviceModel.acNumber.intValue < 2) { //BroadScale BM15 mesure complete
+            
+            //        int sex = _sexSegmentedC.selectedSegmentIndex == 0 ? 1 : 2;
+            //        int age = _ageTextF.text.intValue;
+            //        int height = _heightTextF.text.intValue;
+            //
+            //        AlgorithmModel *algModel = [AlgorithmSDK getBodyDataFromAlgorithm_1WithWeight:weight adc:adc sex:sex age:age height:height];
+            AlgorithmModel *algModel = [AlgorithmSDK getBodyDataFromAlgorithm_1WithWeight:weight adc:adc sex:_appUser.sex age:_appUser.age height:_appUser.height];
+            NSLog(@"BM15 AlgorithmModel: %@",algModel);
+            _currentInfoModel.fatRate = algModel.BM_BFR.floatValue;
+            _currentInfoModel.BMI = algModel.BM_BMI.floatValue;
+            _currentInfoModel.moisture = algModel.BM_Water.floatValue;
+            _currentInfoModel.muscle = algModel.BM_MuscleRate.floatValue;
+            _currentInfoModel.BMR = algModel.BM_BMR.floatValue;
+            _currentInfoModel.boneMass = algModel.BM_BoneMass.floatValue;
+            _currentInfoModel.visceralFat = algModel.BM_VisFat.floatValue;
+            _currentInfoModel.proteinRate = algModel.BM_ProteinRate.floatValue;
+            _currentInfoModel.physicalAge = algModel.BM_BodyAge.floatValue;
+            _currentInfoModel.subcutaneousFat = algModel.BM_SubFat.floatValue;
+            
+            //refresh
+            [self refreshTableView];
+            
+        } else { //connect scale measure complete
+            
+            [self syncWeighingUserToBle];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self syncOfflineUserListToBle];
+            });
+            
+        }
+
+    }
+    
+}
+
+
+- (void)refreshTableView {
+    
+    NSString *weightShow = [self getWeightShowStr:_currentInfoModel unit:_unitSegmentedControl.selectedSegmentIndex];
+    [self.itemValueArr replaceObjectAtIndex:0 withObject:weightShow];
+    [self.itemValueArr replaceObjectAtIndex:1 withObject:[NSString stringWithFormat:@"%.1f",_currentInfoModel.BMI]];
+    [self.itemValueArr replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%.1f",_currentInfoModel.fatRate]];
+    [self.itemValueArr replaceObjectAtIndex:3 withObject:[NSString stringWithFormat:@"%.1f％",_currentInfoModel.muscle]];
+    [self.itemValueArr replaceObjectAtIndex:4 withObject:[NSString stringWithFormat:@"%.1f％",_currentInfoModel.moisture]];
+    [self.itemValueArr replaceObjectAtIndex:5 withObject:[NSString stringWithFormat:@"%.1f",_currentInfoModel.boneMass]];
+    [self.itemValueArr replaceObjectAtIndex:6 withObject:[NSString stringWithFormat:@"%.1fkcal",_currentInfoModel.BMR]];
+    [self.itemValueArr replaceObjectAtIndex:7 withObject:[NSString stringWithFormat:@"%.0f",_currentInfoModel.visceralFat]];
+    [self.itemValueArr replaceObjectAtIndex:8 withObject:[NSString stringWithFormat:@"%.1f％",_currentInfoModel.subcutaneousFat]];
+    [self.itemValueArr replaceObjectAtIndex:9 withObject:[NSString stringWithFormat:@"%.1f％",_currentInfoModel.proteinRate]];
+    [self.itemValueArr replaceObjectAtIndex:10 withObject:[NSString stringWithFormat:@"%.1f",_currentInfoModel.physicalAge]];
+    [self.itemValueArr replaceObjectAtIndex:11 withObject:[NSString stringWithFormat:@"%.0f",_currentInfoModel.newAdc]];
+    [self.itemValueArr replaceObjectAtIndex:12 withObject:[NSString stringWithFormat:@"%.1f°C",_currentInfoModel.temperature]];
+
+    [self.tableView reloadData];
+}
+
+
+- (void)AnalysisBLEDataManager:(AnalysisBLEDataManager *)analysisManager backOfflineHistorys:(NSMutableArray <UserInfoModel *> *)historysMutableArr {
+    
+    _tipLB.text = [NSString stringWithFormat:@"Got %zd offline historys! check sdk log.",historysMutableArr.count];
+    
+    for (UserInfoModel *info in historysMutableArr) {
+        NSLog(@"get offline history:\n %@",info);
     }
 
 }
 
-- (void)updateLabelsForLinkScale:(UserInfoModel *)infoModel {
-
-    _currentInfoModel                   = infoModel;
-    self.weightsumValue.text            = [self getWeightShowStr:infoModel unit:_unitSegmentedControl.selectedSegmentIndex];
-    self.BMIValue.text                  = [NSString stringWithFormat:@"%.1f",infoModel.BMI];
-    self.fatRateValue.text              = [NSString stringWithFormat:@"%.1f％",infoModel.fatRate];
-    self.muscleValue.text               = [NSString stringWithFormat:@"%.1f％",infoModel.muscle];
-    self.moistureValue.text             = [NSString stringWithFormat:@"%.1f％",infoModel.moisture];
-    self.boneMassValue.text             = [NSString stringWithFormat:@"%.1f",infoModel.boneMass];
-    self.subcutaneousFatValue.text      = [NSString stringWithFormat:@"%.1f％",infoModel.subcutaneousFat];
-    self.BMRValue.text                  = [NSString stringWithFormat:@"%.1fkcal",infoModel.BMR];
-    self.proteinRateValue.text          = [NSString stringWithFormat:@"%.1f％",infoModel.proteinRate];
-    self.visceralFatValue.text          = [NSString stringWithFormat:@"%.0f",infoModel.visceralFat];
-    self.physicalAgeValue.text          = [NSString stringWithFormat:@"%.1f",infoModel.physicalAge];
-    self.AdcValue.text                  = [NSString stringWithFormat:@"%.0f",infoModel.newAdc];
-    self.tempValue.text                 = [NSString stringWithFormat:@"%.1f°C",infoModel.temperature];
+#pragma mark ============ tableView datasource ==============
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.itemNameArr.count;
 }
 
-
+static NSString * const CellID = @"CellID";
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellID];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellID];
+        cell.textLabel.textColor = [UIColor blackColor];
+        cell.detailTextLabel.textColor = [UIColor blueColor];
+    }
+    
+    //赋值
+    cell.textLabel.text = self.itemNameArr[indexPath.row];
+    cell.detailTextLabel.text = self.itemValueArr[indexPath.row];
+    
+    return cell;
+}
 
 
 #pragma mark ============ handle weight point ==============

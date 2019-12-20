@@ -7,8 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
-#import "DeviceModel.h"
-#import "UserInfoModel.h"
+@class UserInfoModel,DeviceModel;
 
 typedef NS_ENUM(NSInteger,BluetoothManagerState) {
     BluetoothManagerState_PowerOn,

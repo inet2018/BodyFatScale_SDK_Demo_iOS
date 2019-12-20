@@ -14,6 +14,7 @@
 #import "DeviceModel.h"
 #import "UserInfoModel.h"
 #import "AlgorithmSDK.h"
+#import "BLEUser.h"
 
 #endif /* InetBleSDK_h */
 
