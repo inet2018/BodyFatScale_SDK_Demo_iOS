@@ -1,12 +1,27 @@
  [中文文档](README_CN.md)
 
-<font color = #000000 size = 6> Inet Body Fat Scale SDK Instructions </font>
+# Inet Body Fat Scale SDK Instructions
 
-<font color = #0000ff size = 2> Note: This SDK upgrade to version 2.0 (AIFit-Demo-New) is a major version upgrade with new features and improved stability. Some class names and method names have changed. Not compatible with previous versions. The old version of AIFit-Demo is no longer maintained, please use the new version as much as possible. </font>
 
-<font color = #000000 size = 5> Contents </font>
+Note: This SDK upgrade to version 2.0 (AIFit-Demo-New) is a major version upgrade with new features and improved stability. Some class names and method names have changed. Not compatible with previous versions. The old version of AIFit-Demo is no longer maintained, please use the new version as much as possible.
 
-[toc]
+
+## Contents
+
+* Overview
+* Conditions of Use
+* SDK integration
+* Get SDK version
+* Get the Bluetooth status of the IOS system
+* Get INBluetoothManager working status
+* Get AnalysisBLEDataManager working status
+* Device Type
+* Scan device list
+* Broadcast scale interactive process
+* Connection scale interactive process
+* Version history
+* FAQ
+* Technical Support
 
 
 ## Overview

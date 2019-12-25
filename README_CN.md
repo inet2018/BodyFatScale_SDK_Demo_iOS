@@ -1,12 +1,27 @@
+ [README_EN](README.md)
+ 
+# Inet体脂秤SDK使用说明
 
-<font color=#000000 size=6> Inet体脂秤SDK使用说明 </font>
 
-<font color=#0000ff size=2> 注意：本次SDK升级为2.0(AIFit-Demo-New)，是大版本升级，新增功能，提升稳定性，部分类名和方法名发生了变化，将不再兼容之前的版本。旧版本AIFit-Demo不再维护，请尽量使用新版本。</font>
+注意：本次SDK升级为2.0(AIFit-Demo-New)，是大版本升级，新增功能，提升稳定性，部分类名和方法名发生了变化，将不再兼容之前的版本。旧版本AIFit-Demo不再维护，请尽量使用新版本。
 
 
-<font color=#000000 size=5> 目录 </font>
+## 目录
 
-[toc]
+* 概述
+* 使用条件
+* SDK集成
+* 获取SDK版本号
+* 获取IOS系统蓝牙状态
+* 获取INBluetoothManager工作状态
+* 获取AnalysisBLEDataManager工作状态
+* 设备类型
+* 扫描设备列表
+* 广播秤交互流程
+* 连接秤交互流程
+* 版本历史
+* FAQ
+* 技术支持
 
 
 ## 概述
