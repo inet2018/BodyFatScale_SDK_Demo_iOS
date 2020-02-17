@@ -1,6 +1,0 @@
-framework module InetBleSDK {
-  umbrella header "InetBleSDK.h"
-
-  export *
-  module * { export * }
-}
